@@ -49,7 +49,7 @@ export default function Login() {
         />
 
         <Checkbox />
-        <input type="submit" className="btn btn-primary text-white" />
+        <input type="submit" value="Login"  className="btn btn-primary text-white" />
       </form>
       <span className="text-neutral my-6">or sign in with</span>
       <button className="flex bg-[#E4E7EB] py-3 px-[65px] gap-3 mb-4">

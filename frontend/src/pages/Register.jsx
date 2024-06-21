@@ -12,7 +12,8 @@ export default function Register() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
-  const handleSubmit = () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Mencegah halaman refresh saat submit
     const data = {
       name,
       email,
@@ -23,10 +24,10 @@ export default function Register() {
       .then(() => {
         enqueueSnackbar("Register successful", {
           variant: "success",
-          autoHideDuration: 3000,
+          autoHideDuration: 500,
         });
         setTimeout(() => {
-          navigate("/");
+          navigate('/');
         }, 3000); // Tunggu hingga Snackbar menghilang sebelum mengarahkan pengguna
       })
       .catch((err) => {
