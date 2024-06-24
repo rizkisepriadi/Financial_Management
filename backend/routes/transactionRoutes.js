@@ -1,7 +1,11 @@
 import express from "express";
 import { Transaction } from "../model/transactionModel.js";
+import requireAuth from "../middleware/requireAuth.js"
 
 const router = express.Router();
+
+// require auth for all
+router.use(requireAuth)
 
 // Fungsi untuk mengonversi tanggal dari format dd-mm-yyyy menjadi Date
 const convertDate = (dateStr) => {

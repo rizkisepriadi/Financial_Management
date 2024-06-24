@@ -1,32 +1,30 @@
 import Input from "../components/input";
 import { useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
 import Checkbox from "../components/checkbox";
 import Google from "../assets/Google.svg";
+import { useLogin } from "../../hooks/useLogin";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const { login, isLoading } = useLogin();
 
-  const handleSubmit = () => {
-    const data = {
-      email,
-      password,
-    };
-    axios
-      .post("http://localhost:5000/login", data)
-      .then(() => {
-        enqueueSnackbar("Login successful", { variant: "success" });
-        navigate("/dashboard");
-      })
-      .catch((err) => {
-        enqueueSnackbar(err.response.data.message, { variant: "error" });
-        console.log(err);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      await login(email, password);
+      // navigate("/dashboard");
+    } catch (err) {
+      enqueueSnackbar(err.message || "Registration failed", {
+        variant: "error",
+        autoHideDuration: 3000,
       });
+    }
   };
 
   return (
@@ -49,7 +47,12 @@ export default function Login() {
         />
 
         <Checkbox />
-        <input type="submit" value="Login"  className="btn btn-primary text-white" />
+        <input
+          type="submit"
+          value="Login"
+          disabled={isLoading}
+          className="btn btn-primary text-white"
+        />
       </form>
       <span className="text-neutral my-6">or sign in with</span>
       <button className="flex bg-[#E4E7EB] py-3 px-[65px] gap-3 mb-4">

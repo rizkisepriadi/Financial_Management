@@ -18,21 +18,16 @@ export const useSignup = () => {
         password,
       });
 
-      const userData = response.data;
-
       // Simpan user ke local storage
-      localStorage.setItem("user", JSON.stringify(userData));
+      localStorage.setItem("user", JSON.stringify(response.data));
 
       // Perbarui konteks auth
-      dispatch({ type: "LOGIN", payload: userData });
+      dispatch({ type: "LOGIN", payload: response.data });
 
       setIsLoading(false);
-      return userData;
     } catch (err) {
       setIsLoading(false);
-      const errorMessage = err.response?.data?.message || "Registration failed";
-      setError(errorMessage);
-      throw new Error(errorMessage); // Lempar kesalahan untuk ditangkap oleh komponen pemanggil
+      setError(err.response?.data?.message || "Registration failed");
     }
   };
 
