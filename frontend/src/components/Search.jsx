@@ -1,6 +1,6 @@
 export default function Search() {
   return (
-    <label className="input input-bordered flex items-center gap-[120px] py-3 pr-6 pl-8 shadow-md">
+    <label className="input input-bordered flex items-center gap-[120px] py-3 pr-6 pl-8 shadow-md w-[352px]">
       <input type="text" className="grow" placeholder="Search" />
       <svg
         xmlns="http://www.w3.org/2000/svg"

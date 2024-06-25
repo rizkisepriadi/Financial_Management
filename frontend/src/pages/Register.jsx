@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
 import Input from "../components/input";
 import Google from "../assets/Google.svg";
-import { useSignup } from "../../hooks/useSignup";
+import { useSignup } from "../hooks/useSignup";
 
 export default function Register() {
   const [name, setName] = useState("");

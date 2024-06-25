@@ -5,7 +5,7 @@ export default function Goals() {
   return (
     <div className="flex flex-col">
       <h1 className="text-neutral text-[22px]">Goals</h1>
-      <div className="py-5 px-8 bg-white shadow-md gap-5 flex flex-col">
+      <div className="py-5 px-8 bg-white shadow-md gap-5 flex flex-col h-[232px]">
         <div className="flex justify-between pb-3">
           <div className="flex gap-3">
             <h1 className="text-[22px] font-extrabold">$20,000</h1>

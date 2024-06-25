@@ -11,10 +11,10 @@ export default function TotalBalance() {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col ">
       <h1 className="text-neutral text-[22px]">Total Balance</h1>
-      <div className="py-5 px-6 bg-white shadow-md">
-        <div className="flex justify-between pb-3">
+      <div className="py-5 px-6 bg-white shadow-md h-[232px]">
+        <div className="flex justify-between">
           <h1 className="text-[22px] font-extrabold">$240,399</h1>
           <p className="text-base font-medium">All Accounts</p>
         </div>
@@ -52,7 +52,7 @@ export default function TotalBalance() {
             </svg>
           </div>
         </div>
-        <div className="flex justify-center mt-2">
+        <div className="flex justify-center mt-1 mb-1">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}

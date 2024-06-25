@@ -4,12 +4,12 @@ import { useState } from "react";
 import { useSnackbar } from "notistack";
 import Checkbox from "../components/checkbox";
 import Google from "../assets/Google.svg";
-import { useLogin } from "../../hooks/useLogin";
+import { useLogin } from "../hooks/useLogin";
+
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { login, isLoading } = useLogin();
 
@@ -18,7 +18,7 @@ export default function Login() {
 
     try {
       await login(email, password);
-      // navigate("/dashboard");
+      
     } catch (err) {
       enqueueSnackbar(err.message || "Registration failed", {
         variant: "error",

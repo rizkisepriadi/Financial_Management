@@ -18,7 +18,7 @@ const Gauge = ({ value }) => {
       />
       <div className="flex justify-evenly space-x-3  w-full text-gray-500">
         <span>$0</span>
-        <p className="text-2xl font-bold">{value / 1000}K</p>
+        <p className="text-base font-bold">{value / 1000}K</p>
         <span>$20k</span>
       </div>
       <div className="text-center mt-4">

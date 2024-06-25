@@ -1,7 +1,10 @@
 import express from "express";
 import { Expense } from "../model/expensesModel.js";
+import requireAuth from "../middleware/requireAuth.js"
 
 const router = express.Router();
+
+router.use(requireAuth)
 
 const convertDate = (dateStr) => {
   const [day, month, year] = dateStr.split("-");
