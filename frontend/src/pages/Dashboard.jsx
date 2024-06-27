@@ -1,7 +1,4 @@
 import Navbar from "../components/Navbar";
-import Date from "../assets/Date.svg";
-import Search from "../components/Search";
-import Notification from "../components/Notification";
 import TotalBalance from "../components/TotalBalance";
 import Goals from "../components/Goals";
 import UpcomingBill from "../components/UpcomingBill";
@@ -12,16 +9,17 @@ import { useAuthContext } from "../hooks/useAuthContext";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { jwtDecode } from 'jwt-decode';
+import Header from "../components/Header";
 
 export default function Dashboard() {
   const [isUser, setisUser] = useState({});
-  const { user, dispatch } = useAuthContext();
+  const { user } = useAuthContext();
   
 
   useEffect(() => {
-    const decoded = jwtDecode(user.token);
-
+    
     if (user && user.token) {
+      const decoded = jwtDecode(user.token);
       axios
         .get(`http://localhost:5000/user/${decoded._id}`, {
           headers: {
@@ -35,29 +33,14 @@ export default function Dashboard() {
           console.error(err);
         });
     }
-  }, [dispatch, user]);
+  }, [user]);
 
   return (
     <div className="flex h-[1024px]">
       <Navbar name={isUser.name} />
       <div className="px-8 pb-5 w-[1440px]">
         {/* Dashboard Header */}
-        <div className="flex justify-between items-center py-5 ">
-          {/* Dashboard User Info */}
-          <div className="flex gap-6 items-center">
-            <h1 className="font-bold text-2xl">Hello {isUser.name}</h1>
-            <div className="flex items-center gap-2">
-              <img src={Date} alt="" />
-              <p className="text-sm">May 19, 2023</p>
-            </div>
-          </div>
-
-          {/* Search Bar & Notification */}
-          <div className="flex gap-10 items-center">
-            <Notification />
-            <Search />
-          </div>
-        </div>
+        <Header name={isUser.name} />
 
         {/* Dashboard Content */}
         <div className="flex gap-6 ">

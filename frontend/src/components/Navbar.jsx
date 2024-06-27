@@ -29,16 +29,16 @@ export default function Navbar({ name }) {
         <nav className="mb-[228px]">
           <ul className="text-white">
             <li>
-              <NavBtn link="/" icon={Overview} text="Overview" />
+              <NavBtn link="/dashboard" icon={Overview} text="Overview" />
             </li>
             <li>
-              <NavBtn link=" " icon={wallet} text="Balances" />
+              <NavBtn link="/balances" icon={wallet} text="Balances" />
             </li>
             <li>
-              <NavBtn link="" icon={Transaction} text="Transactions" />
+              <NavBtn link="/transactions" icon={Transaction} text="Transactions" />
             </li>
             <li>
-              <NavBtn link="" icon={Bill} text="Bills" />
+              <NavBtn link="/bills" icon={Bill} text="Bills" />
             </li>
             <li>
               <NavBtn link="" icon={Expencces} text="Expenses" />
