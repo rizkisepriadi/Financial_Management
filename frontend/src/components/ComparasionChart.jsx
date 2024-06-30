@@ -15,7 +15,7 @@ const data = [
   { day: "Wed", thisWeek: 20000, lastWeek: 20000 },
   { day: "Thu", thisWeek: 10000, lastWeek: 30000 },
   { day: "Fri", thisWeek: 250000, lastWeek: 50000 },
-  { day: "Sat", thisWeek: 50000, lastWeek: 50000 },
+  { day: "Sat", thisWeek: 50000, lastWeek: 50000 }, 
 ];
 
 const WeeklyComparisonChart = () => {
@@ -26,7 +26,7 @@ const WeeklyComparisonChart = () => {
         <div className="flex justify-between">
           <h2 className="text-lg font-semibold">Weekly Comparison</h2>
           <div className="flex gap-6 ">
-            <div className="flex gap-2 items-center">
+            <div className="flex gap-2 ite ms-center">
               <span className="w-4 h-2 bg-primary"></span>
               <p className="text-xs">This week</p>
             </div>

@@ -27,7 +27,9 @@ export const useSignup = () => {
       setIsLoading(false);
     } catch (err) {
       setIsLoading(false);
-      setError(err.response?.data?.message || "Registration failed");
+      const errorMessage = err.response?.data?.message || "Registration failed";
+      setError(errorMessage);
+      throw new Error(errorMessage);  // Lempar error untuk ditangkap oleh komponen
     }
   };
 

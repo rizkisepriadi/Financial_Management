@@ -2,7 +2,7 @@ import Up from '../assets/Up.svg';
 import Right from '../assets/Right.svg';
 
 // eslint-disable-next-line react/prop-types
-export default function ExpensesBtn({ img }) {
+export default function   ExpensesBtn({ img }) {
   return (
     <>
       <div className="flex items-center py-6">

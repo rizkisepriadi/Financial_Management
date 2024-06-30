@@ -41,13 +41,13 @@ export default function Navbar({ name }) {
               <NavBtn link="/bills" icon={Bill} text="Bills" />
             </li>
             <li>
-              <NavBtn link="" icon={Expencces} text="Expenses" />
+              <NavBtn link="/expenses" icon={Expencces} text="Expenses" />
             </li>
             <li>
-              <NavBtn link="" icon={Goal} text="Goals" />
+              <NavBtn link="/goals" icon={Goal} text="Goals" />
             </li>
             <li>
-              <NavBtn link="" icon={Settings} text="Settings" />
+              <NavBtn link="/settings" icon={Settings} text="Settings" />
             </li>
           </ul>
         </nav>
