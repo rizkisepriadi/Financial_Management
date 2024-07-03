@@ -1,13 +1,17 @@
 import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from "jwt-decode"; // Pastikan impor jwtDecode benar
 import axios from "axios";
 import Header from "../components/Header";
+import BalanceCard from "../components/BalanceCard";
+import AddBalanceCard from "../components/AddBalanceCard";
 
 export default function Balances() {
-  const [isUser, setisUser] = useState({});
+  const [isUser, setIsUser] = useState({});
   const { user } = useAuthContext();
+  const [balance, setBalance] = useState([]);
+  const [add, setAdd] = useState(false);
 
   useEffect(() => {
     if (user && user.token) {
@@ -19,7 +23,16 @@ export default function Balances() {
           },
         })
         .then((response) => {
-          setisUser(response.data);
+          setIsUser(response.data);
+
+          return axios.get(`http://localhost:5000/balances`, {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+            },
+          });
+        })
+        .then((response) => {
+          setBalance(response.data.data);
         })
         .catch((err) => {
           console.error(err);
@@ -33,120 +46,28 @@ export default function Balances() {
       <div className="px-8 pb-5 w-[1440px]">
         {/* Dashboard Header */}
         <Header className="hidden" />
-        <div className="flex flex-col gap-3">
-          <h1 className="text-neutral text-[22px]">Account Details</h1>
-          <div className="flex flex-col bg-white p-8 rounded-md">
-            <div className="grid grid-rows-2 grid-cols-3 gap-8">
-              <div className="flex flex-col">
-                <p className="text-neutral text-base">Bank Name</p>
-                <h1 className="text-accent text-xl font-bold">AB Bank ltd.</h1>
-              </div>
-              <div className="flex flex-col">
-                <p className="text-neutral text-base">Account Type</p>
-                <h1 className="text-accent text-xl font-bold">Checking</h1>
-              </div>
-              <div>
-                <p className="text-neutral text-base">Balance</p>
-                <h1 className="text-accent text-xl font-bold">$25,056.00</h1>
-              </div>
-              <div className="flex flex-col">
-                <p className="text-neutral text-base">Branch Name</p>
-                <h1 className="text-accent text-xl font-bold">
-                  Park Street Branch
-                </h1>
-              </div>
-              <div className="flex flex-col">
-                <p className="text-neutral text-base">Account Number</p>
-                <h1 className="text-accent text-xl font-bold">1234567890</h1>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <button className="bg-primary text-white px-4 py-2 rounded-md mt-4">
-                Edit Details
-              </button>
-              <button className="text-neutral font-bold px-4 py-2 rounded-md mt-4">
-                Remove
-              </button>
-            </div>
-          </div>
+        {!add && (
+          <div className="grid grid-flow-row grid-cols-3 gap-6">
+            {balance.map((item) => (
+              <BalanceCard key={item._id} item={item} />
+            ))}
 
-          <div className="flex flex-col mt-5 mb-2 gap-3">
-            <h1 className="text-neutral text-[22px]">Transactions History</h1>
-            <div className="flex flex-col bg-white p-5">
-              <div className="overflow-x-auto">
-                <table className="table">
-                  {/* head */}
-                  <thead>
-                    <tr>
-                      <th>Date</th>
-                      <th>Status</th>
-                      <th>Transaction Type</th>
-                      <th>Receipt</th>
-                      <th>Amount</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {/* row 1 */}
-                    <tr>
-                      <td>17 Apr, 2023</td>
-                      <td>Complate</td>
-                      <td>Credit</td>
-                      <td>8C422Y3823</td>
-                      <td>$160.00</td>
-                    </tr>
-                    <tr>
-                      <td>17 Apr, 2023</td>
-                      <td>Complate</td>
-                      <td>Credit</td>
-                      <td>8C422Y3823</td>
-                      <td>$160.00</td>
-                    </tr>
-                    <tr>
-                      <td>17 Apr, 2023</td>
-                      <td>Complate</td>
-                      <td>Credit</td>
-                      <td>8C422Y3823</td>
-                      <td>$160.00</td>
-                    </tr>
-                    <tr>
-                      <td>17 Apr, 2023</td>
-                      <td>Complate</td>
-                      <td>Credit</td>
-                      <td>8C422Y3823</td>
-                      <td>$160.00</td>
-                    </tr>
-                    <tr>
-                      <td>17 Apr, 2023</td>
-                      <td>Complate</td>
-                      <td>Credit</td>
-                      <td>8C422Y3823</td>
-                      <td>$160.00</td>
-                    </tr>
-                    <tr>
-                      <td>17 Apr, 2023</td>
-                      <td>Complate</td>
-                      <td>Credit</td>
-                      <td>8C422Y3823</td>
-                      <td>$160.00</td>
-                    </tr>
-                    <tr>
-                      <td>17 Apr, 2023</td>
-                      <td>Complate</td>
-                      <td>Credit</td>
-                      <td>8C422Y3823</td>
-                      <td>$160.00</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div className="self-center">
-                <button className="bg-primary text-white px-4 py-2 rounded-md mt-4">
-                  Load More
-                </button>{" "}
-              </div>
+            <div className="w-[352px] h-[288px] pt-[100px] pb-[88px] px-6 bg-white drop-shadow-md flex flex-col gap-1 rounded-lg">
+              <button
+                className="btn btn-primary py-3 px-8 rounded text-white"
+                onClick={() => setAdd(true)}
+              >
+                Add Accounts
+              </button>
+              <button className="btn border-none bg-transparent py-3 px-8 rounded">
+                Edit Accounts
+              </button>
             </div>
           </div>
-        </div>
+        )}
+        {add && (
+          <AddBalanceCard set={() => setAdd(false)} userId={isUser._id} />
+        )}
       </div>
     </div>
   );

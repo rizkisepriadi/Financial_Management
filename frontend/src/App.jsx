@@ -3,6 +3,7 @@ import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import Balances from "./pages/Balances.jsx";
+import DetailBalance from "./pages/DetailBalance.jsx";
 import Transactions from "./pages/Transactions.jsx";
 import Bills from "./pages/Bills.jsx";
 import Expenses from "./pages/Expenses.jsx";
@@ -16,6 +17,7 @@ function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/balances" element={<Balances />} />
+      <Route path="/balances/detail/:id" element={<DetailBalance />} />
       <Route path="/transactions" element={<Transactions />} />
       <Route path="/bills" element={<Bills />} />
       <Route path="/expenses" element={<Expenses />} />

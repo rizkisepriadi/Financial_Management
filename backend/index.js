@@ -5,6 +5,7 @@ import "dotenv/config";
 import userRoute from "./routes/userRoute.js";
 import userTransaction from "./routes/transactionRoutes.js";
 import expenseRoute from "./routes/expenseRoute.js";
+import balanceRoute from "./routes/balanceRoute.js"
 
 const app = express();
 const PORT = process.env.PORT;
@@ -20,6 +21,7 @@ app.get("/", (req, res) => {
 app.use("/", userRoute);
 app.use("/", userTransaction);
 app.use("/", expenseRoute);
+app.use("/", balanceRoute);
 
 mongoose
   .connect(process.env.MONGO_URI)

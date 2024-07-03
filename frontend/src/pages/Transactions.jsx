@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
@@ -5,27 +6,67 @@ import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import Header from "../components/Header";
 
-export default function Transactions() {
-  const [isUser, setisUser] = useState({});
-  const { user } = useAuthContext();
+const PAGE_SIZE = 1;
 
-  useEffect(() => {
-    if (user && user.token) {
-      const decoded = jwtDecode(user.token);
-      axios
-        .get(`http://localhost:5000/user/${decoded._id}`, {
+export default function Transactions() {
+  const [isUser, setIsUser] = useState({});
+  const { user } = useAuthContext();
+  const [isTransaction, setIsTransaction] = useState([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const loadTransactions = async (page) => {
+    setIsLoading(true);
+    try {
+      if (user && user.token) {
+        const decoded = jwtDecode(user.token);
+        const userResponse = await axios.get(`http://localhost:5000/user/${decoded._id}`, {
           headers: {
             Authorization: `Bearer ${user.token}`,
           },
-        })
-        .then((response) => {
-          setisUser(response.data);
-        })
-        .catch((err) => {
-          console.error(err);
         });
+
+        setIsUser(userResponse.data);
+
+        const transactionResponse = await axios.get(`http://localhost:5000/transaction`, {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+          params: { page, pageSize: PAGE_SIZE },
+        });
+
+        console.log("Transaction Response:", transactionResponse.data);
+
+        const data = transactionResponse.data;
+
+        if (data.data && Array.isArray(data.data)) {
+          // Pastikan untuk hanya menambahkan transaksi baru tanpa duplikasi
+          setIsTransaction((prevTransactions) => [
+            ...prevTransactions,
+            ...data.data.filter(transaction => 
+              !prevTransactions.some(prevTransaction => prevTransaction._id === transaction._id)
+            )
+          ]);
+          setHasMore(data.data.length > 0);
+        } else {
+          throw new Error("Invalid transaction data format");
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
     }
-  }, [user]);
+  };
+
+  useEffect(() => {
+    loadTransactions(page);
+  }, [page]);
+
+  const handleLoadMore = () => {
+    setPage((prevPage) => prevPage + 1);
+  };
 
   return (
     <div className="flex h-[1024px]">
@@ -55,35 +96,25 @@ export default function Transactions() {
                     </tr>
                   </thead>
                   <tbody>
-                    {/* row 1 */}
-                    <tr>
-                      <th>GTR-5</th>
-                      <td>Gadget & Gear</td>
-                      <td>17 May, 2023</td>
-                      <td>Credit Card</td>
-                      <th>$160.00</th>
-                    </tr>
-                    <tr>
-                      <th>GTR-5</th>
-                      <td>Gadget & Gear</td>
-                      <td>17 May, 2023</td>
-                      <td>Credit Card</td>
-                      <th>$160.00</th>
-                    </tr>
-                    <tr>
-                      <th>GTR-5</th>
-                      <td>Gadget & Gear</td>
-                      <td>17 May, 2023</td>
-                      <td>Credit Card</td>
-                      <th>$160.00</th>
-                    </tr>
+                    {isTransaction.map((transaction) => (
+                      <tr key={transaction._id}>
+                        <th>{transaction.items}</th>
+                        <td>{transaction.shop_name}</td>
+                        <td>{new Date(transaction.date).toLocaleDateString()}</td>
+                        <td>{transaction.payment_method}</td>
+                        <th>${transaction.amount}</th>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
               <div className="self-center">
-                <button className="bg-primary text-white px-4 py-2 rounded-md mt-4">
-                  Load More
-                </button>{" "}
+                {hasMore && !isLoading && (
+                  <button onClick={handleLoadMore} className="bg-primary text-white px-4 py-2 rounded-md mt-4">
+                    Show
+                  </button>
+                )}
+                {isLoading && <p>Loading...</p>}
               </div>
             </div>
           </div>
