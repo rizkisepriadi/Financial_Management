@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+ /* eslint-disable react-hooks/exhaustive-deps */
 import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
@@ -40,15 +40,15 @@ export default function Transactions() {
 
         const data = transactionResponse.data;
 
-        if (data.data && Array.isArray(data.data)) {
+        if (data && Array.isArray(data)) {
           // Pastikan untuk hanya menambahkan transaksi baru tanpa duplikasi
           setIsTransaction((prevTransactions) => [
             ...prevTransactions,
-            ...data.data.filter(transaction => 
+            ...data.filter(transaction => 
               !prevTransactions.some(prevTransaction => prevTransaction._id === transaction._id)
             )
           ]);
-          setHasMore(data.data.length > 0);
+          setHasMore(data.length > 0);
         } else {
           throw new Error("Invalid transaction data format");
         }

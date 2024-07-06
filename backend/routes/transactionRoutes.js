@@ -1,11 +1,11 @@
 import express from "express";
 import { Transaction } from "../model/transactionModel.js";
-import requireAuth from "../middleware/requireAuth.js"
+import requireAuth from "../middleware/requireAuth.js";
 
 const router = express.Router();
 
-// require auth for all
-router.use(requireAuth)
+// require auth for all routes
+router.use(requireAuth);
 
 // Fungsi untuk mengonversi tanggal dari format dd-mm-yyyy menjadi Date
 const convertDate = (dateStr) => {
@@ -15,14 +15,14 @@ const convertDate = (dateStr) => {
 
 router.post("/transaction", async (req, res) => {
   try {
-      const { items, shop_name, date, payment_method, amount } = req.body;
+    const { items, shop_name, date, payment_method, amount, tag } = req.body;
 
-      if (!items || !shop_name || !date || !payment_method || !amount) {
-        return res.status(400).send({
-          message:
-            "Send all required fields: items, shop_name, date, payment_method, amount",
-        });
-      }
+    if (!items || !shop_name || !date || !payment_method || !amount) {
+      return res.status(400).send({
+        message:
+          "Send all required fields: items, shop_name, date, payment_method, amount",
+      });
+    }
 
     const convertedDate = convertDate(date);
 
@@ -32,6 +32,7 @@ router.post("/transaction", async (req, res) => {
       date: convertedDate,
       payment_method,
       amount,
+      tag
     };
 
     const transaction = await Transaction.create(newTransaction);
@@ -43,20 +44,21 @@ router.post("/transaction", async (req, res) => {
   }
 });
 
-// Get all transaction
+// Get all transactions or by tag
 router.get("/transaction", async function (req, res) {
-  try {
-    const transaction = await Transaction.find({});
+  const { tag } = req.query;
 
-    return res.status(200).send({
-      count: transaction.length,
-      data: transaction,
-    });
-  } catch (err) {
-    console.error(err);
-    return res.status(400).send({
-      message: err.message,
-    });
+  try {
+    let query = {};
+    if (tag) {
+      query.tag = tag;
+    }
+
+    const data = await Transaction.find(query);
+    return res.status(200).send(data);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ message: error.message });
   }
 });
 
@@ -78,7 +80,7 @@ router.get("/transaction/:id", async function (req, res) {
 // Update transaction
 router.put("/transaction/:id", async function (req, res) {
   try {
-    const { items, shop_name, date, payment_method, amount } = req.body;
+    const { items, shop_name, date, payment_method, amount, tag } = req.body;
 
     if (!items || !shop_name || !date || !payment_method || !amount) {
       return res.status(400).send({
@@ -95,6 +97,7 @@ router.put("/transaction/:id", async function (req, res) {
       date: convertedDate,
       payment_method,
       amount,
+      tag
     };
 
     const { id } = req.params;
@@ -114,6 +117,7 @@ router.put("/transaction/:id", async function (req, res) {
   }
 });
 
+// Delete transaction
 router.delete("/transaction/:id", async function (req, res) {
   try {
     const { id } = req.params;

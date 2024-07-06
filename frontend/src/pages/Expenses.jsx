@@ -16,19 +16,6 @@ import {
 } from "recharts";
 import ExpensesBreakdownBTN from "../components/ExpensesBreakdownBTN";
 
-const data = [
-  { day: "Jan", thisWeek: 250000, lastWeek: 50000 },
-  { day: "Feb", thisWeek: 50000, lastWeek: 50000 },
-  { day: "Mar", thisWeek: 10000, lastWeek: 25000 },
-  { day: "Apr", thisWeek: 20000, lastWeek: 20000 },
-  { day: "May", thisWeek: 10000, lastWeek: 30000 },
-  { day: "Jun", thisWeek: 250000, lastWeek: 50000 },
-  { day: "Aug", thisWeek: 50000, lastWeek: 50000 },
-  { day: "Sep", thisWeek: 50000, lastWeek: 50000 },
-  { day: "Oct", thisWeek: 50000, lastWeek: 50000 },
-  { day: "Nov", thisWeek: 50000, lastWeek: 50000 },
-  { day: "Dec", thisWeek: 50000, lastWeek: 50000 },
-];
 
 export default function Balances() {
   const [isUser, setisUser] = useState({});
@@ -51,6 +38,20 @@ export default function Balances() {
         });
     }
   }, [user]);
+
+  const data = [
+    { day: "Jan", thisMonth: 250000, lastMonth: 50000 },
+    { day: "Feb", thisMonth: 50000, lastMonth: 50000 },
+    { day: "Mar", thisMonth: 10000, lastMonth: 25000 },
+    { day: "Apr", thisMonth: 20000, lastMonth: 20000 },
+    { day: "May", thisMonth: 10000, lastMonth: 30000 },
+    { day: "Jun", thisMonth: 250000, lastMonth: 50000 },
+    { day: "Aug", thisMonth: 50000, lastMonth: 50000 },
+    { day: "Sep", thisMonth: 50000, lastMonth: 50000 },
+    { day: "Oct", thisMonth: 50000, lastMonth: 50000 },
+    { day: "Nov", thisMonth: 50000, lastMonth: 50000 },
+    { day: "Dec", thisMonth: 50000, lastMonth: 50000 },
+  ];
 
   return (
     <div className="flex h-[1024px]">
@@ -83,21 +84,21 @@ export default function Balances() {
                 <XAxis dataKey="day" />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="lastWeek" fill="#E5E5E5" name="Last week" />
-                <Bar dataKey="thisWeek" fill="#00C9A7" name="This week" />
+                <Bar dataKey="lastMonth" fill="#E5E5E5" name="Last Month" />
+                <Bar dataKey="thisMonth" fill="#00C9A7" name="This Month" />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
         <div className="flex flex-col gap-3 mt-4">
           <h1 className="text-neutral text-[22px]">Expenses Breakdown</h1>
-          <div className="grid grid-cols-3 grid-rows-2 grid-flow-col gap-6">
-            <ExpensesBreakdownBTN img={Housing} />
-            <ExpensesBreakdownBTN img={Housing} />
-            <ExpensesBreakdownBTN img={Housing} />
-            <ExpensesBreakdownBTN img={Housing} />
-            <ExpensesBreakdownBTN img={Housing} />
-            <ExpensesBreakdownBTN img={Housing} />
+          <div className="grid grid-cols-3 grid-rows-2 grid-flow-row gap-6">
+            <ExpensesBreakdownBTN img={Housing} text="housing" />
+            <ExpensesBreakdownBTN img={Housing} text="food" />
+            <ExpensesBreakdownBTN img={Housing} text="transportation" />
+            <ExpensesBreakdownBTN img={Housing} text="entertainment" />
+            <ExpensesBreakdownBTN img={Housing} text="shopping" />
+            <ExpensesBreakdownBTN img={Housing} text="others" />
           </div>
         </div>
       </div>

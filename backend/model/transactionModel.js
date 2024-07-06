@@ -14,6 +14,9 @@ const transactionModel = mongoose.Schema(
       type: Date,
       required: true,
     },
+    tag: {
+      type: String,
+    },
     payment_method: {
       type: String,
       required: true,

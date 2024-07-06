@@ -15,7 +15,7 @@ export default function Bills() {
       const decoded = jwtDecode(user.token);
       axios
         .get(`http://localhost:5000/user/${decoded._id}`, {
-          headers: {
+          headers: {  
             Authorization: `Bearer ${user.token}`,
           },
         })
