@@ -16,9 +16,9 @@ import {
 } from "recharts";
 import ExpensesBreakdownBTN from "../components/ExpensesBreakdownBTN";
 
-
-export default function Balances() {
+export default function Expenses() {
   const [isUser, setisUser] = useState({});
+  const [transactionData, setTransactionData] = useState([]); // [1
   const { user } = useAuthContext();
 
   useEffect(() => {
@@ -32,6 +32,19 @@ export default function Balances() {
         })
         .then((response) => {
           setisUser(response.data);
+          axios
+            .get(`http://localhost:5000/transaction?user_id=${decoded._id}`, {
+              headers: {
+                Authorization: `Bearer ${user.token}`,
+              },
+            })
+            .then((response) => {
+              setTransactionData(response.data.data);
+              console.log(response.data.data);
+            })
+            .catch((err) => {
+              console.error(err);
+            });
         })
         .catch((err) => {
           console.error(err);
@@ -39,19 +52,95 @@ export default function Balances() {
     }
   }, [user]);
 
-  const data = [
-    { day: "Jan", thisMonth: 250000, lastMonth: 50000 },
-    { day: "Feb", thisMonth: 50000, lastMonth: 50000 },
-    { day: "Mar", thisMonth: 10000, lastMonth: 25000 },
-    { day: "Apr", thisMonth: 20000, lastMonth: 20000 },
-    { day: "May", thisMonth: 10000, lastMonth: 30000 },
-    { day: "Jun", thisMonth: 250000, lastMonth: 50000 },
-    { day: "Aug", thisMonth: 50000, lastMonth: 50000 },
-    { day: "Sep", thisMonth: 50000, lastMonth: 50000 },
-    { day: "Oct", thisMonth: 50000, lastMonth: 50000 },
-    { day: "Nov", thisMonth: 50000, lastMonth: 50000 },
-    { day: "Dec", thisMonth: 50000, lastMonth: 50000 },
-  ];
+  const getMonthlyExpenses = (transactions, month, year) => {
+    const filteredTransactions = transactions.filter(
+      (transaction) =>
+        new Date(transaction.date).getMonth() === month &&
+        new Date(transaction.date).getFullYear() === year
+    );
+    return filteredTransactions.reduce(
+      (acc, transaction) => acc + transaction.amount,
+      0
+    );
+  };
+
+  const generateChartData = (transactions) => {
+    const currentYear = new Date().getFullYear();
+    const lastMonth = new Date().getMonth() - 1;
+    const thisMonth = new Date().getMonth();
+
+    console.log("Generating chart data for:", {
+      lastMonth,
+      thisMonth,
+      currentYear,
+    });
+
+    return [
+      {
+        month: "Jan",
+        thisMonth: getMonthlyExpenses(transactions, 0, currentYear),
+        lastMonth: getMonthlyExpenses(transactions, 0, currentYear - 1),
+      },
+      {
+        month: "Feb",
+        thisMonth: getMonthlyExpenses(transactions, 1, currentYear),
+        lastMonth: getMonthlyExpenses(transactions, 1, currentYear - 1),
+      },
+      {
+        month: "Mar",
+        thisMonth: getMonthlyExpenses(transactions, 2, currentYear),
+        lastMonth: getMonthlyExpenses(transactions, 2, currentYear - 1),
+      },
+      {
+        month: "Apr",
+        thisMonth: getMonthlyExpenses(transactions, 3, currentYear),
+        lastMonth: getMonthlyExpenses(transactions, 3, currentYear - 1),
+      },
+      {
+        month: "May",
+        thisMonth: getMonthlyExpenses(transactions, 4, currentYear),
+        lastMonth: getMonthlyExpenses(transactions, 4, currentYear - 1),
+      },
+      {
+        month: "Jun",
+        thisMonth: getMonthlyExpenses(transactions, 5, currentYear),
+        lastMonth: getMonthlyExpenses(transactions, 5, currentYear - 1),
+      },
+      {
+        month: "Jul",
+        thisMonth: getMonthlyExpenses(transactions, 6, currentYear),
+        lastMonth: getMonthlyExpenses(transactions, 6, currentYear - 1),
+      },
+      {
+        month: "Aug",
+        thisMonth: getMonthlyExpenses(transactions, 7, currentYear),
+        lastMonth: getMonthlyExpenses(transactions, 7, currentYear - 1),
+      },
+      {
+        month: "Sep",
+        thisMonth: getMonthlyExpenses(transactions, 8, currentYear),
+        lastMonth: getMonthlyExpenses(transactions, 8, currentYear - 1),
+      },
+      {
+        month: "Oct",
+        thisMonth: getMonthlyExpenses(transactions, 9, currentYear),
+        lastMonth: getMonthlyExpenses(transactions, 9, currentYear - 1),
+      },
+      {
+        month: "Nov",
+        thisMonth: getMonthlyExpenses(transactions, 10, currentYear),
+        lastMonth: getMonthlyExpenses(transactions, 10, currentYear - 1),
+      },
+      {
+        month: "Dec",
+        thisMonth: getMonthlyExpenses(transactions, 11, currentYear),
+        lastMonth: getMonthlyExpenses(transactions, 11, currentYear - 1),
+      },
+    ];
+  };
+
+  const chartData = generateChartData(transactionData);
+  console.log("Chart data generated:", chartData); // Tambahkan console log ini
 
   return (
     <div className="flex h-[1024px]">
@@ -77,7 +166,7 @@ export default function Balances() {
             </div>
             <ResponsiveContainer width="100%" height={258}>
               <BarChart
-                data={data}
+                data={chartData}
                 margin={{ top: 20, right: 30, left: 20, bottom: 10 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
@@ -93,12 +182,36 @@ export default function Balances() {
         <div className="flex flex-col gap-3 mt-4">
           <h1 className="text-neutral text-[22px]">Expenses Breakdown</h1>
           <div className="grid grid-cols-3 grid-rows-2 grid-flow-row gap-6">
-            <ExpensesBreakdownBTN img={Housing} text="housing" />
-            <ExpensesBreakdownBTN img={Housing} text="food" />
-            <ExpensesBreakdownBTN img={Housing} text="transportation" />
-            <ExpensesBreakdownBTN img={Housing} text="entertainment" />
-            <ExpensesBreakdownBTN img={Housing} text="shopping" />
-            <ExpensesBreakdownBTN img={Housing} text="others" />
+            <ExpensesBreakdownBTN
+              img={Housing}
+              userId={isUser._id}
+              text="housing"
+            />
+            <ExpensesBreakdownBTN
+              img={Housing}
+              userId={isUser._id}
+              text="food"
+            />
+            <ExpensesBreakdownBTN
+              img={Housing}
+              userId={isUser._id}
+              text="transportation"
+            />
+            <ExpensesBreakdownBTN
+              img={Housing}
+              userId={isUser._id}
+              text="entertainment"
+            />
+            <ExpensesBreakdownBTN
+              img={Housing}
+              userId={isUser._id}
+              text="shopping"
+            />
+            <ExpensesBreakdownBTN
+              img={Housing}
+              userId={isUser._id}
+              text="others"
+            />
           </div>
         </div>
       </div>
