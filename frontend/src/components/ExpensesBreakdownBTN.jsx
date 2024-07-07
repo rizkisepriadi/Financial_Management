@@ -6,7 +6,7 @@ import { useAuthContext } from "../hooks/useAuthContext";
 import { jwtDecode } from "jwt-decode";
 
 // eslint-disable-next-line react/prop-types
-export default function ExpensesBreakdownBTN({ img, text }) {
+export default function ExpensesBreakdownBTN({ img, text, userId }) {
   const [data, setData] = useState({});
   const [isUser, setIsUser] = useState({});
   const { user } = useAuthContext();
@@ -29,24 +29,25 @@ export default function ExpensesBreakdownBTN({ img, text }) {
           setIsUser(userResponse.data);
 
           const transactionResponse = await axios.get(
-            `http://localhost:5000/transaction?tag=${text}`,
+            `http://localhost:5000/transaction?user_id=${userId}&tag=${text}`,
             {
               headers: {
                 Authorization: `Bearer ${user.token}`,
               },
             }
           );
-          const transactions = transactionResponse.data;
+          const transactions = transactionResponse.data.data;
           setData(transactions);
 
           // Calculate total amount
+          const currentYear = new Date().getFullYear();
           const total = transactions.reduce((sum, transaction) => {
             return sum + transaction.amount;
           }, 0);
           setTotalAmount(total);
 
           // Calculate percentage compared to a fixed value or previous total
-          const previousTotal = 1000; // Example previous total
+          const previousTotal = 900; // Example previous total
           const percent = (total / previousTotal) * 100;
           setPercentage(percent);
 
@@ -57,7 +58,7 @@ export default function ExpensesBreakdownBTN({ img, text }) {
     };
 
     fetchData();
-  }, [user, text]);
+  }, [user, text, userId]);
 
   return (
     <>
@@ -88,7 +89,7 @@ export default function ExpensesBreakdownBTN({ img, text }) {
         <div className="flex flex-col items-center bg-white py-4 px-6 w-full h-full justify-between drop-shadow-md">
           {data.length > 0 ? (
             data.slice(0, 2).map((item) => (
-              <div key={item.id} className="flex w-full justify-between py-2">
+              <div key={item._id} className="flex w-full justify-between py-2">
                 <h1 className="text-base font-semibold">{item.items}</h1>
                 <div className="flex flex-col items-end">
                   <h1 className="text-base font-semibold">

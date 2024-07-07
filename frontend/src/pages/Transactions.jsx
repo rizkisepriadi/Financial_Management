@@ -26,10 +26,9 @@ export default function Transactions() {
             Authorization: `Bearer ${user.token}`,
           },
         });
-
         setIsUser(userResponse.data);
 
-        const transactionResponse = await axios.get(`http://localhost:5000/transaction`, {
+        const transactionResponse = await axios.get(`http://localhost:5000/transaction?user_id=${decoded._id}`, {
           headers: {
             Authorization: `Bearer ${user.token}`,
           },
@@ -38,7 +37,7 @@ export default function Transactions() {
 
         console.log("Transaction Response:", transactionResponse.data);
 
-        const data = transactionResponse.data;
+        const data = transactionResponse.data.data;
 
         if (data && Array.isArray(data)) {
           // Pastikan untuk hanya menambahkan transaksi baru tanpa duplikasi

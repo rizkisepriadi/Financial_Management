@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const transactionModel = mongoose.Schema(
   {
@@ -8,6 +8,11 @@ const transactionModel = mongoose.Schema(
     },
     shop_name: {
       type: String,
+      required: true,
+    },
+    user_id: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
       required: true,
     },
     date: {

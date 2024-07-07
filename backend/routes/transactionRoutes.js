@@ -16,8 +16,16 @@ const convertDate = (dateStr) => {
 router.post("/transaction", async (req, res) => {
   try {
     const { items, shop_name, date, payment_method, amount, tag } = req.body;
+    const user_id = req.user._id;
 
-    if (!items || !shop_name || !date || !payment_method || !amount) {
+    if (
+      !items ||
+      !shop_name ||
+      !date ||
+      !payment_method ||
+      !user_id ||
+      !amount
+    ) {
       return res.status(400).send({
         message:
           "Send all required fields: items, shop_name, date, payment_method, amount",
@@ -30,9 +38,10 @@ router.post("/transaction", async (req, res) => {
       items,
       shop_name,
       date: convertedDate,
+      user_id,
       payment_method,
       amount,
-      tag
+      tag,
     };
 
     const transaction = await Transaction.create(newTransaction);
@@ -46,21 +55,31 @@ router.post("/transaction", async (req, res) => {
 
 // Get all transactions or by tag
 router.get("/transaction", async function (req, res) {
-  const { tag } = req.query;
+  const { user_id, tag } = req.query;
+
+  if (!user_id) {
+    return res.status(400).send({ message: 'User ID is required' });
+  }
 
   try {
-    let query = {};
+    let query = { user_id: user_id };
+
     if (tag) {
       query.tag = tag;
     }
 
     const data = await Transaction.find(query);
-    return res.status(200).send(data);
+
+    return res.status(200).send({
+      count: data.length,
+      data: data,
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).send({ message: error.message });
   }
 });
+
 
 // Get transaction by id
 router.get("/transaction/:id", async function (req, res) {
@@ -97,7 +116,7 @@ router.put("/transaction/:id", async function (req, res) {
       date: convertedDate,
       payment_method,
       amount,
-      tag
+      tag,
     };
 
     const { id } = req.params;
