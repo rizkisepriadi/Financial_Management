@@ -4,7 +4,8 @@ import cors from "cors";
 import "dotenv/config";
 import userRoute from "./routes/userRoute.js";
 import userTransaction from "./routes/transactionRoutes.js";
-import expenseRoute from "./routes/expenseRoute.js";
+import expenseRoute from "./routes/expensesGoalsRoutes.js";
+import savingsGoals from "./routes/savingsGoalsRoutes.js";
 import balanceRoute from "./routes/balanceRoute.js"
 
 const app = express();
@@ -21,6 +22,7 @@ app.get("/", (req, res) => {
 app.use("/", userRoute);
 app.use("/", userTransaction);
 app.use("/", expenseRoute);
+app.use("/", savingsGoals);
 app.use("/", balanceRoute);
 
 mongoose
