@@ -8,6 +8,8 @@ import Gauge from "../components/Gauge";
 import AdjustBTN from "../components/AdjustBTN";
 import ExpensesGoalsBTN from "../components/ExpensesGoalsBTN";
 import Housing from "../assets/Housing.svg";
+import PopUpInput1 from "../components/PopUpInput1";
+import PopUpInput2 from "../components/PopUpInput2";
 import {
   AreaChart,
   Area,
@@ -58,6 +60,8 @@ const data = [
 
 export default function Goals() {
   const [isUser, setisUser] = useState({});
+  const [pop1, setPop1] = useState(false);
+  const [pop2, setPop2] = useState(false);
   const { user } = useAuthContext();
 
   useEffect(() => {
@@ -86,7 +90,7 @@ export default function Goals() {
         <Header className="hidden" />
         <div className="flex flex-col gap-3">
           <h1 className="text-neutral text-[22px]">Goals</h1>
-          <div className="flex gap-6">
+          <div className="flex gap-6 relative">
             <div className="flex flex-col bg-white rounded-md w-[368px] py-6 px-5 gap-5 drop-shadow-lg">
               <div className="flex w-full justify-between items-center">
                 <h1 className="font-bold text-base">Savings Goal</h1>
@@ -150,7 +154,7 @@ export default function Goals() {
                 </div>
               </div>
               <div className="flex justify-center">
-                <AdjustBTN text="Adjust Goal" />
+                <AdjustBTN set={() => setPop1(true)} text="Adjust Goal" />
               </div>
             </div>
 
@@ -194,18 +198,50 @@ export default function Goals() {
                 </AreaChart>
               </ResponsiveContainer>
             </div>
+            {pop1 && <PopUpInput1 set={() => setPop1(false)} />}
+            {pop2 && <PopUpInput2 set={() => setPop2(false)} />}
           </div>
           <div className="flex flex-col gap-3">
             <h1 className="text-neutral text-[22px]">
               Expenses Goals by Category
             </h1>
             <div className="grid grid-flow-row grid-cols-3 grid-rows-2 gap-4">
-              <ExpensesGoalsBTN img={Housing} />
-              <ExpensesGoalsBTN img={Housing} />
-              <ExpensesGoalsBTN img={Housing} />
-              <ExpensesGoalsBTN img={Housing} />
-              <ExpensesGoalsBTN img={Housing} />
-              <ExpensesGoalsBTN img={Housing} />
+              <ExpensesGoalsBTN
+                img={Housing}
+                userId={isUser._id}
+                text="housing"
+                set={() => setPop2(true)}
+              />
+              <ExpensesGoalsBTN
+                img={Housing}
+                userId={isUser._id}
+                text="food"
+                set={() => setPop2(true)}
+              />
+              <ExpensesGoalsBTN
+                img={Housing}
+                userId={isUser._id}
+                text="transportation"
+                set={() => setPop2(true)}
+              />
+              <ExpensesGoalsBTN
+                img={Housing}
+                userId={isUser._id}
+                text="entertainment"
+                set={() => setPop2(true)}
+              />
+              <ExpensesGoalsBTN
+                img={Housing}
+                userId={isUser._id}
+                text="shopping"
+                set={() => setPop2(true)}
+              />
+              <ExpensesGoalsBTN
+                img={Housing}
+                userId={isUser._id}
+                text="others"
+                set={() => setPop1(true)}
+              />
             </div>
           </div>
         </div>

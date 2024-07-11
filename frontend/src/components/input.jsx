@@ -4,7 +4,7 @@ export default function Input({ label, ...rest }) {
     <input
       type="text"
       placeholder={label}
-      className="input input-bordered w-[400px] max-w-xs"
+      className="input input-bordered bg-white w-[400px] max-w-xs"
       {...rest}
     />
   );

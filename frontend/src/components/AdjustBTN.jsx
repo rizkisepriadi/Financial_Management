@@ -1,7 +1,7 @@
 // eslint-disable-next-line react/prop-types
-export default function AdjustBTN({ text }) {
+export default function AdjustBTN({ text, set }) {
   return (
-    <button className="border-2 border-primary px-5 py-2 rounded-md text-primary">
+    <button onClick={set} className="border-2 border-primary px-5 py-2 rounded-md text-primary">
       <div className="flex items-center gap-2 ">
         {text}
         <svg
