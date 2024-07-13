@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import bcrypt, { compare } from "bcrypt";
+import bcrypt from "bcrypt";
 import validator from "validator";
 
 const userSchema = mongoose.Schema(
@@ -77,5 +77,41 @@ userSchema.statics.login = async function (email, password) {
 
   return user;
 };
+
+userSchema.statics.updatePassword = async function (id, oldPassword, newPassword, retypePassword) {
+  // Validation
+  if (!oldPassword || !newPassword || !retypePassword) {
+    throw Error("All fields must be filled");
+  }
+
+  const user = await this.findById(id);
+
+  if (!user) {
+    throw Error("User not found");
+  }
+
+  const match = await bcrypt.compare(oldPassword, user.password);
+
+  if (!match) {
+    throw Error("Incorrect password");
+  }
+
+  if (!validator.isStrongPassword(newPassword)) {
+    throw Error("Password not strong enough");
+  }
+
+  if (newPassword !== retypePassword) {
+    throw Error("New Password doesn't match");
+  }
+
+  const salt = await bcrypt.genSalt(10);
+  const hash = await bcrypt.hash(newPassword, salt);
+
+  user.password = hash;
+  await user.save();
+
+  return user;
+};
+
 
 export const User = mongoose.model("User", userSchema);
