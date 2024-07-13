@@ -1,37 +1,68 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+/* eslint-disable no-unused-vars */
 import { useSnackbar } from "notistack";
-import Input from "./input";
-import { useSignup } from "../hooks/useSignup";
+import Input from "../components/input";
+import { useEffect, useState } from "react";
+import { useAuthContext } from "../hooks/useAuthContext";
+import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 
 export default function FormSecurity() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
+  const [retypePassword, setRetypePassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const { enqueueSnackbar } = useSnackbar();
-  // eslint-disable-next-line no-unused-vars
-  const { signup, isLoading, error } = useSignup();
+  const { user } = useAuthContext();
+  const [isUser, setisUser] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      await signup(name, email, password);
-      enqueueSnackbar("Register successful", {
-        variant: "success",
-        autoHideDuration: 500,
-      });
-      setTimeout(() => {
-        navigate("/");
-      }, 3000);
-    } catch (err) {
-      enqueueSnackbar(err.message || "Registration failed", {
-        variant: "error",
-        autoHideDuration: 3000,
-      });
-      console.error(err);
+  useEffect(() => {
+    if (user && user.token) {
+      const decoded = jwtDecode(user.token);
+      axios
+        .get(`http://localhost:5000/user/${decoded._id}`, {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        })
+        .then((response) => {
+          setisUser(response.data);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     }
+  }, [user]);
+
+  const handleSubmit = (e) => {
+    if (!user || !user.token) {
+      enqueueSnackbar("User not authenticated", { variant: "error" });
+      return;
+    }
+    const data = {
+      id: isUser._id,
+      oldPassword: password,
+      newPassword: newPassword,
+      retypePassword: retypePassword,
+    };
+
+    axios
+      .put(`http://localhost:5000/user/${isUser._id}/formsecurity`, data, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      })
+      .then(() => {
+        enqueueSnackbar("Profile updated", { variant: "success" });
+      })
+      .catch((error) => {
+        console.error("Error response:", error.response);
+        enqueueSnackbar(
+          error.response?.data?.message || "Failed to update profile",
+          {
+            variant: "error",
+          }
+        );
+      });
   };
 
   return (
@@ -40,24 +71,26 @@ export default function FormSecurity() {
         <label className="mb-2">Old Password</label>
         <Input
           className="w-full py-4 px-6"
-          label="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          type="password"
+          label="Old Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
         <label className="mb-2">New Password</label>
         <Input
           className="w-full py-4 px-6"
-          label="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          type="password"
+          label="New Password"
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
         />
         <label className="mb-2">Retype Password</label>
         <Input
           className="w-full py-4 px-6"
           type="password"
-          label="Username"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          label="Retype Password"
+          value={retypePassword}
+          onChange={(e) => setRetypePassword(e.target.value)}
         />
         <input
           type="submit"
