@@ -170,7 +170,7 @@ export default function Expenses() {
                 margin={{ top: 20, right: 30, left: 20, bottom: 10 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="day" />
+                <XAxis dataKey="month" />
                 <YAxis />
                 <Tooltip />
                 <Bar dataKey="lastMonth" fill="#E5E5E5" name="Last Month" />
