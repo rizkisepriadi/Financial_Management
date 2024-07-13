@@ -61,8 +61,10 @@ const data = [
 export default function Goals() {
   const [isUser, setisUser] = useState({});
   const [pop1, setPop1] = useState(false);
+  const [isTemp, setTemp] = useState();
   const [pop2, setPop2] = useState(false);
   const { user } = useAuthContext();
+  const [goals, setGoals] = useState({ target_amount: 0 });
 
   useEffect(() => {
     if (user && user.token) {
@@ -75,6 +77,19 @@ export default function Goals() {
         })
         .then((response) => {
           setisUser(response.data);
+          axios
+            .get(
+              `http://localhost:5000/goals/savinggoal?user_id=${decoded._id}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${user.token}`,
+                },
+              }
+            )
+            .then((response) => {
+              console.log("Goals Response:", response.data.data[0]);
+              setGoals(response.data.data[0]);
+            });
         })
         .catch((err) => {
           console.error(err);
@@ -120,7 +135,9 @@ export default function Goals() {
                       </svg>
                       <p className="text-xs text-neutral">Target Achieved</p>
                     </div>
-                    <h1 className="ml-6 font-bold text-base">$12,500</h1>
+                    <h1 className="ml-6 font-bold text-base">
+                      ${goals.achieved_amount}
+                    </h1>
                   </div>
                   <div>
                     <div className=" flex items-center">
@@ -146,11 +163,13 @@ export default function Goals() {
                       </svg>
                       <p className="text-xs text-neutral">This month Target</p>
                     </div>
-                    <h1 className="ml-6 font-bold text-base">$20,000</h1>
+                    <h1 className="ml-6 font-bold text-base">
+                      ${goals.target_amount}
+                    </h1>
                   </div>
                 </div>
                 <div className="">
-                  <Gauge value={12000} />
+                  <Gauge value={goals.achieved_amount} max={goals.target_amount} />
                 </div>
               </div>
               <div className="flex justify-center">
@@ -199,7 +218,7 @@ export default function Goals() {
               </ResponsiveContainer>
             </div>
             {pop1 && <PopUpInput1 set={() => setPop1(false)} />}
-            {pop2 && <PopUpInput2 set={() => setPop2(false)} />}
+            {pop2 && <PopUpInput2 set={() => setPop2(false)} temp={isTemp} />}
           </div>
           <div className="flex flex-col gap-3">
             <h1 className="text-neutral text-[22px]">
@@ -208,39 +227,82 @@ export default function Goals() {
             <div className="grid grid-flow-row grid-cols-3 grid-rows-2 gap-4">
               <ExpensesGoalsBTN
                 img={Housing}
-                userId={isUser._id}
-                text="housing"
-                set={() => setPop2(true)}
+                temp="Housing"
+                btn={
+                  <AdjustBTN
+                    set={() => {
+                      setPop2(true);
+                      setTemp("Housing");
+                    }}
+                    text="Adjust"
+                  />
+                }
+              />
+
+              <ExpensesGoalsBTN
+                img={Housing}
+                temp="Food"
+                btn={
+                  <AdjustBTN
+                    set={() => {
+                      setPop2(true);
+                      setTemp("Food");
+                    }}
+                    text="Adjust"
+                  />
+                }
               />
               <ExpensesGoalsBTN
                 img={Housing}
-                userId={isUser._id}
-                text="food"
-                set={() => setPop2(true)}
+                temp="Transportation"
+                btn={
+                  <AdjustBTN
+                    set={() => {
+                      setPop2(true);
+                      setTemp("Transportation");
+                    }}
+                    text="Adjust"
+                  />
+                }
               />
               <ExpensesGoalsBTN
                 img={Housing}
-                userId={isUser._id}
-                text="transportation"
-                set={() => setPop2(true)}
+                temp="Entertainment"
+                btn={
+                  <AdjustBTN
+                    set={() => {
+                      setPop2(true);
+                      setTemp("Entertainment");
+                    }}
+                    text="Adjust"
+                  />
+                }
               />
               <ExpensesGoalsBTN
                 img={Housing}
-                userId={isUser._id}
-                text="entertainment"
-                set={() => setPop2(true)}
+                temp="Shopping"
+                btn={
+                  <AdjustBTN
+                    set={() => {
+                      setPop2(true);
+                      setTemp("Shopping");
+                    }}
+                    text="Adjust"
+                  />
+                }
               />
               <ExpensesGoalsBTN
                 img={Housing}
-                userId={isUser._id}
-                text="shopping"
-                set={() => setPop2(true)}
-              />
-              <ExpensesGoalsBTN
-                img={Housing}
-                userId={isUser._id}
-                text="others"
-                set={() => setPop1(true)}
+                temp="Others"
+                btn={
+                  <AdjustBTN
+                    set={() => {
+                      setPop2(true);
+                      setTemp("Others");
+                    }}
+                    text="Adjust"
+                  />
+                }
               />
             </div>
           </div>
