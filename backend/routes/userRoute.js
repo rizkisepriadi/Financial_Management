@@ -49,11 +49,62 @@ router.get("/user/:id", async (req, res) => {
 
     const user = await User.findById(id);
 
-    return res.status(200).json(user)
+    return res.status(200).json(user);
   } catch (error) {
     console.log(error.message);
     response.status(500).send({ message: error.message });
   }
-})
+});
+
+// Update FormAccount
+router.put("/user/:id/formaccount", async (req, res) => {
+  try {
+    const { name, email, username, telp } = req.body;
+    if (!name || !email || !username || !telp) {
+      return res.status(400).send({
+        message:
+          "Send all required fields: name, email, username, telp",
+      });
+    }
+
+    const { id } = req.params;
+
+    const data = {
+      name,
+      email,
+      username,
+      telp,
+    };
+
+    const user = await User.findByIdAndUpdate(id, data);
+
+    return res.status(200).json(user);
+  } catch (error) {
+    console.log(error.message);
+    response.status(500).send({ message: error.message });
+  }
+});
+
+// Update FormSecurity
+router.put("/user/:id/formsecurity", async (req, res) => {
+  try {
+    const { oldPassword, newPassword, retypePassword } = req.body;
+    if (!oldPassword || !newPassword || !retypePassword) {
+      return res.status(400).send({
+        message: "Send all required fields: oldPassword, newPassword, retypePassword",
+      });
+    }
+
+    const { id } = req.params;
+
+    const user = await User.updatePassword(id, oldPassword, newPassword, retypePassword);
+
+    return res.status(200).json({ message: "Password updated successfully" });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send({ message: error.message });
+  }
+});
+
 
 export default router;
