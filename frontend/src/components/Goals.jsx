@@ -1,17 +1,77 @@
 import Edit from "../assets/Edit.svg";
 import Gauge from "./Gauge";
+import { useEffect, useState } from "react";
+import { useAuthContext } from "../hooks/useAuthContext";
+import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 
 export default function Goals() {
+  // eslint-disable-next-line no-unused-vars
+  const [isUser, setisUser] = useState({});
+  const { user } = useAuthContext();
+  const [goals, setGoals] = useState({ target_amount: 0 });
+
+  useEffect(() => {
+    if (user && user.token) {
+      const decoded = jwtDecode(user.token);
+      axios
+        .get(`http://localhost:5000/user/${decoded._id}`, {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        })
+        .then((response) => {
+          setisUser(response.data);
+          axios
+            .get(
+              `http://localhost:5000/goals/savinggoal?user_id=${decoded._id}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${user.token}`,
+                },
+              }
+            )
+            .then((response) => {
+              setGoals(response.data.data[0]);
+            });
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  }, [user]);
+
+  const months = [
+    "",
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
   return (
     <div className="flex flex-col">
       <h1 className="text-neutral text-[22px]">Goals</h1>
       <div className="py-5 px-8 bg-white shadow-md gap-5 flex flex-col h-[232px]">
         <div className="flex justify-between pb-3">
           <div className="flex gap-3">
-            <h1 className="text-[22px] font-extrabold">$20,000</h1>
+            <h1 className="text-[22px] font-extrabold">
+              ${new Number(goals.target_amount).toLocaleString()}
+            </h1>
             <img src={Edit} alt="" />
           </div>
-          <p className="text-base font-medium">May, 2003</p>
+          <p className="text-base font-medium">
+            {months[new Date(goals.start_date).getMonth()]},{" "}
+            {new Date(goals.start_date).getFullYear()}
+          </p>
         </div>
         <div className="flex gap-4">
           <div className="flex flex-col gap-6">
@@ -31,7 +91,9 @@ export default function Goals() {
                 </svg>
                 <p className="text-xs text-neutral">Target Achieved</p>
               </div>
-              <h1 className="ml-6 font-bold text-base">$12,500</h1>
+              <h1 className="ml-6 font-bold text-base">
+                ${new Number(goals.achieved_amount).toLocaleString()}
+              </h1>
             </div>
             <div>
               <div className=" flex items-center">
@@ -57,11 +119,13 @@ export default function Goals() {
                 </svg>
                 <p className="text-xs text-neutral">This month Target</p>
               </div>
-              <h1 className="ml-6 font-bold text-base">$20,000</h1>
+              <h1 className="ml-6 font-bold text-base">
+                ${new Number(goals.target_amount).toLocaleString()}
+              </h1>
             </div>
           </div>
           <div className="">
-            <Gauge value={12000} />
+            <Gauge value={goals.achieved_amount} max={goals.target_amount} />
           </div>
         </div>
       </div>
