@@ -16,7 +16,7 @@ export default function RecentTransBtn({ img, items, tag, amount, date }) {
         </div>
         <div className="py-2 px-3">
           <h1 className="font-semibold">${amount}</h1> 
-          <p className="text-xs">{new Date(date).toLocaleDateString}</p>
+          <p className="text-xs">{new Date(date).toLocaleDateString()}</p>
         </div>
       </div>
     </>

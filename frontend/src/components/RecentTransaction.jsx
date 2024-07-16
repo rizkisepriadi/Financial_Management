@@ -29,7 +29,6 @@ export default function RecentTransaction() {
               },
             })
             .then((response) => {
-              console.log("Transaction Response:", response.data);
               setIsTransaction(response.data.data);
             })
             .catch((err) => {
@@ -52,7 +51,7 @@ export default function RecentTransaction() {
           <h3>Expenses</h3>
         </div>
         <div>
-          {isTransaction.slice(0, 6).map((transaction) => (
+          {isTransaction.slice(0, 5).map((transaction) => (
             <RecentTransBtn
               key={transaction._id}
               img={Game}

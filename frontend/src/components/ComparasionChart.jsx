@@ -37,7 +37,6 @@ const WeeklyComparisonChart = () => {
             })
             .then((response) => {
               setTransactionData(response.data.data);
-              console.log(response.data.data);
             })
             .catch((err) => {
               console.error(err);
@@ -65,12 +64,6 @@ const WeeklyComparisonChart = () => {
     const currentYear = new Date().getFullYear();
     const lastMonth = new Date().getMonth() - 1;
     const thisMonth = new Date().getMonth();
-
-    console.log("Generating chart data for:", {
-      lastMonth,
-      thisMonth,
-      currentYear,
-    });
 
     return [
       {
@@ -137,7 +130,6 @@ const WeeklyComparisonChart = () => {
   };
 
   const chartData = generateChartData(transactionData);
-  console.log("Chart data generated:", chartData); // Tambahkan console log ini
 
   return (
     <div className="mt-6">
