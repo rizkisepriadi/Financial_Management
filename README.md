@@ -13,7 +13,7 @@
 
 ## Technologies Used
 - **Backend**: Node.js, Express.js, MongoDB
-- **Frontend**: React.js, Redux, TailwindCSS
+- **Frontend**: React.js, TailwindCSS
 
 ## Design
 The design for this application was inspired by and sourced from the [Figma Community](https://www.figma.com/community/file/1227525441534506928/finebank-financial-management-dashboard-ui-kits). It provides a user-friendly and visually appealing interface that enhances the overall user experience.
@@ -29,10 +29,10 @@ The design for this application was inspired by and sourced from the [Figma Comm
    cd Financial_Management/backend
 4. Install the necessary dependencies:
    ```bash
-   npm install
+   pnpm install
 5. Start the server:
    ```bash
-   npm start
+   pnpm start
 
 #### Frontend Setup
 1. Navigate to the frontend directory:
@@ -40,10 +40,10 @@ The design for this application was inspired by and sourced from the [Figma Comm
    cd ../frontend
 2. Install the necessary dependencies:
    ```bash
-   npm install
+   pnpm install
 3. Start the frontend application:
    ```bash
-   npm start
+   pnpm dev
 
 ## Getting Started
 Once both the backend and frontend are running, you can access the application by visiting http://localhost:3000 in your web browser.
