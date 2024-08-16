@@ -1,4 +1,4 @@
-# Financial Management
+# FINEBANK - Financial Management
 
 **Financial Management** is a robust application designed to assist users in managing their finances effectively. The application is built using modern technologies, featuring a clear separation between backend and frontend components.
 
